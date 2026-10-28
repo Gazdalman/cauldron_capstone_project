@@ -1,0 +1,25 @@
+# .NET Build Results / Binaries
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio Files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# VS Code Files
+.vscode/
+
+# SQLite Database Files (Local dev data - keeps cauldron.db out of git)
+*.db
+*.db-shm
+*.db-wal
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+Desktop.ini
