@@ -1,0 +1,30 @@
+﻿name: Build and Deploy Blazor App to Azure App Service
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.x' # Match your target .NET version
+
+    - name: Build and publish with .NET
+      run: |
+        dotnet publish -c Release -o ./publish-folder
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: 'Cauldron' # REPLACE THIS with your exact Azure App Service name
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ./publish-folder
