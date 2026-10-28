@@ -1,9 +1,37 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Cauldron - Dashboard</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
+    <div class="container-fluid py-3">
+        <h1 class="display-5 fw-bold text-dark">Cauldron Kitchen Dashboard 🍲</h1>
+        <p class="col-md-8 fs-4 text-muted">
+            Manage your recipes, build dynamic ingredient lists, and keep your kitchen catalog organized seamlessly in the cloud.
+        </p>
+        <div class="d-flex gap-3">
+            <a href="/recipes/new" class="btn btn-primary btn-lg">Create New Recipe</a>
+            <a href="/recipes" class="btn btn-outline-dark btn-lg">Browse Recipes</a>
+        </div>
+    </div>
+</div>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<div class="row align-items-md-stretch">
+    <div class="col-md-6 mb-4">
+        <div class="h-100 p-5 text-bg-dark rounded-3 shadow-sm">
+            <h2>Quick Overview</h2>
+            <p>
+                Your application is connected to your relational database storage. Use the dynamic form builder to map out quantities, steps, and ingredients on the fly.
+            </p>
+            <a href="/recipes/new" class="btn btn-outline-light" type="button">Get Started</a>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="h-100 p-5 bg-white border rounded-3 shadow-sm">
+            <h2>Cloud Status</h2>
+            <p>
+                Successfully deployed to Azure infrastructure with real-time SignalR WebSockets enabled for instant responsiveness.
+            </p>
+            <span class="badge bg-success">System Online</span>
+        </div>
+    </div>
+</div>

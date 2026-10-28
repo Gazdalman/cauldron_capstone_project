@@ -1,0 +1,66 @@
+@page "/db-test"
+@inject Cauldron.Data.AppDbContext DbContext
+
+<h3>Database Connection Test</h3>
+
+@if (isLoading)
+{
+    <p>Testing connection to PostgreSQL...</p>
+}
+else if (isSuccess)
+{
+    <div class="alert alert-success">
+        <strong>Success!</strong> Successfully connected to the database.
+        @if (databaseCanConnect)
+        {
+            <br /><span>CanConnect() returned true.</span>
+        }
+        @if (tableCount >= 0)
+        {
+            <br /><span>Current number of recipes in database: @tableCount</span>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <strong>Connection Failed:</strong> @errorMessage
+    </div>
+}
+
+@code {
+    private bool isLoading = true;
+    private bool isSuccess = false;
+    private bool databaseCanConnect = false;
+    private int tableCount = -1;
+    private string errorMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Test if EF Core can ping/connect to the database
+            databaseCanConnect = await DbContext.Database.CanConnectAsync();
+
+            if (databaseCanConnect)
+            {
+                // Try querying the Recipes table to ensure migrations have run
+                tableCount = await System.Threading.Tasks.Task.Run(() => DbContext.Recipes.Count());
+                isSuccess = true;
+            }
+            else
+            {
+                errorMessage = "Could not establish a connection to the database server.";
+            }
+        }
+        catch (Exception ex)
+        {
+            isSuccess = false;
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
