@@ -49,6 +49,26 @@ public class UserService
     return user;
   }
 
+  public async Task<bool> ChangePasswordAsync(int id, string currPass, string newPass)
+  {
+    var user = await _context.Users.FindAsync(id);
+    if (user == null)
+    {
+      return false;
+    }
+
+    var verified = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, currPass);
+    if (verified != PasswordVerificationResult.Success)
+    {
+      return false;
+    }
+
+    user.PasswordHash = _passwordHasher.HashPassword(user, newPass);
+    await _context.SaveChangesAsync();
+
+    return true;
+  }
+
   public async Task<bool> DeleteUserAsync(int id)
   {
     var user = await _context.Users.FindAsync(id);
