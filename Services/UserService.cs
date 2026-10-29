@@ -1,5 +1,6 @@
 using Cauldron.Data;
 using Cauldron.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cauldron.Services;
@@ -7,10 +8,12 @@ namespace Cauldron.Services;
 public class UserService
 {
   private readonly AppDbContext _context;
+  private readonly IPasswordHasher<User> _passwordHasher;
 
-  public UserService(AppDbContext context)
+  public UserService(AppDbContext context, IPasswordHasher<User> passwordHasher)
   {
     _context = context;
+    _passwordHasher = passwordHasher;
   }
 
   public async Task<User> GetUserByIdAsync(int userId)
@@ -18,13 +21,26 @@ public class UserService
     return await _context.Users.FindAsync(userId);
   }
 
-  public async Task<User> CreateUserAsync(string email, string displayName)
+    ///<summary>
+    /// Adds a user to the database.
+    /// </summary>
+    /// <param name="email">String that represents the user's email.</param>
+    /// <returns>
+    /// The newly created User
+    /// </returns>
+  public async Task<User> RegisterUserAsync(string username, string email, string password, string? displayName)
   {
+
     var user = new User
     {
+      UserName = username,
       Email = email,
-      DisplayName = displayName
+      DisplayName = displayName ?? username,
+      NormalizedEmail = email.ToUpper(),
+      NormalizedUserName = username.ToUpper()
     };
+
+    user.PasswordHash = _passwordHasher.HashPassword(user, password);
 
     _context.Users.Add(user);
 
@@ -46,4 +62,6 @@ public class UserService
     await _context.SaveChangesAsync();
     return true;
   }
+
+
 }
