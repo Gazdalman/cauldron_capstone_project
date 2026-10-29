@@ -1,5 +1,6 @@
 using Cauldron.Data;
 using Cauldron.Models;
+using Cauldron.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
   options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+  builder.Services.AddScoped<UserService>();
 
 builder.Services.AddDefaultIdentity<User>(options =>
 {

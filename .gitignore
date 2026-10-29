@@ -26,4 +26,4 @@ Desktop.ini
 
 # Test Pages
 Pages/DbTest.razor
-Pages/UserTest*.razor
+Pages/UserTestRoute.razor
