@@ -13,12 +13,12 @@ public class UserService
     _context = context;
   }
 
-  public async Task<User> GetUserById(int userId)
+  public async Task<User> GetUserByIdAsync(int userId)
   {
     return await _context.Users.FindAsync(userId);
   }
 
-  public async Task<User> CreateUser(string email, string displayName)
+  public async Task<User> CreateUserAsync(string email, string displayName)
   {
     var user = new User
     {
@@ -31,5 +31,19 @@ public class UserService
     await _context.SaveChangesAsync();
 
     return user;
+  }
+
+  public async Task<bool> DeleteUserAsync(int id)
+  {
+    var user = await _context.Users.FindAsync(id);
+    if (user == null)
+    {
+      return false;
+    }
+
+    _context.Users.Remove(user);
+
+    await _context.SaveChangesAsync();
+    return true;
   }
 }
