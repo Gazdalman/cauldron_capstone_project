@@ -1,5 +1,6 @@
 using Cauldron.Data;
 using Cauldron.Models;
+using Cauldron.Models.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,24 +50,30 @@ public class UserService
     return user;
   }
 
-  public async Task<bool> ChangePasswordAsync(int id, string currPass, string newPass)
+  public async Task<PasswordChangeResult> ChangePasswordAsync(int id, string currPass, string newPass)
   {
     var user = await _context.Users.FindAsync(id);
     if (user == null)
     {
-      return false;
+      return new PasswordChangeResult { Succeeded = false, ErrorMsg = "No user found"};
     }
 
     var verified = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, currPass);
     if (verified != PasswordVerificationResult.Success)
     {
-      return false;
+      return new PasswordChangeResult { Succeeded = false, ErrorMsg = "Wrong password entered."};
+    }
+
+    verified = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, newPass);
+    if (verified == PasswordVerificationResult.Success)
+    {
+      return new PasswordChangeResult { Succeeded = false, ErrorMsg = "New password cannot be the same as your current password."};
     }
 
     user.PasswordHash = _passwordHasher.HashPassword(user, newPass);
     await _context.SaveChangesAsync();
 
-    return true;
+    return new PasswordChangeResult { Succeeded = true };
   }
 
   public async Task<bool> DeleteUserAsync(int id)
