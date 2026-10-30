@@ -1,4 +1,5 @@
-﻿@inject UserSessionState UserSessionState
+﻿@using Cauldron.Shared.Modals
+@inject UserSessionState UserSessionState
 <nav>
   <h3>Cauldron</h3>
   <div>
@@ -8,28 +9,33 @@
       <button @onclick="UserSessionState.Logout">Log Out</button>
     } else
     {
-      <button @onclick="() => OpenModal(true)">Log In</button>
+      <button @onclick="OpenLogin">Log In</button>
     }
   </div>
 </nav>
 
-@if (isModalOpen)
-{
-    <AuthModal IsLoginMode="isLoginMode" OnClose="CloseModal" />
-}
+<Modal IsOpen="IsModalOpen" OnClose="CloseModal">
+  @if (currView == ModalView.Login)
+  {
+    <LoginModal
+      OnSuccess="CloseModal"
+      OnRegister="() => currView = ModalView.Register" />
+  }
+  </Modal>
 
 @code {
-    private bool isModalOpen = false;
-    private bool isLoginMode = true;
+  private enum ModalView { Login, Register}
+  private bool IsModalOpen = false;
+  private ModalView currView = ModalView.Login;
 
-    private void OpenModal(bool loginMode)
-    {
-        isLoginMode = loginMode;
-        isModalOpen = true;
-    }
+  private void OpenLogin()
+  {
+    currView = ModalView.Login;
+    IsModalOpen = true;
+  }
 
-    private void CloseModal()
-    {
-        isModalOpen = false;
-    }
+  private void CloseModal()
+  {
+    IsModalOpen = false;
+  }
 }
