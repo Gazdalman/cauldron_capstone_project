@@ -19,9 +19,15 @@
   {
     <LoginModal
       OnSuccess="CloseModal"
-      OnRegister="() => currView = ModalView.Register" />
+      OnSwitch="() => currView = ModalView.Register" />
   }
-  </Modal>
+  else if (currView == ModalView.Register)
+  {
+    <RegistrationModal
+      OnSuccess="CloseModal"
+      OnSwitch="() => currView = ModalView.Login" />
+  }
+</Modal>
 
 @code {
   private enum ModalView { Login, Register}

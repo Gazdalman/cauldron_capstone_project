@@ -2,7 +2,7 @@
 @inject UserSessionState UserSessionState
 
   <div class="login-form">
-    <h2>"Welcome Back"</h2>
+    <h2>Welcome Back</h2>
 
     @if (!string.IsNullOrEmpty(errorMessage))
     {
@@ -21,12 +21,12 @@
 
     <button @onclick="HandleLogin">Log In</button>
 
-    <p class="modal-switch">Don't have an account? <a @onclick="OnRegister">Create one</a>.</p>
+    <p class="modal-switch">Don't have an account? <a @onclick="OnSwitch">Create one</a>.</p>
 </div>
 
 @code {
   [Parameter] public EventCallback OnSuccess { get; set; }
-  [Parameter] public EventCallback OnRegister { get; set; }
+  [Parameter] public EventCallback OnSwitch { get; set; }
 
   private string loginCredential = "";
   private string loginPassword = "";

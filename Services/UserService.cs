@@ -79,7 +79,7 @@ public class UserService
     {
       UserName = dto.UserName,
       Email = dto.Email,
-      DisplayName = dto.DisplayName ?? dto.UserName,
+      DisplayName = dto.UserName,
       NormalizedEmail = dto.Email.ToUpper(),
       NormalizedUserName = dto.UserName.ToUpper()
     };
