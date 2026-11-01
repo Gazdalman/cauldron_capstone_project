@@ -23,3 +23,7 @@
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Test Pages
+Pages/DbTest.razor
+Pages/UserTestRoute.razor

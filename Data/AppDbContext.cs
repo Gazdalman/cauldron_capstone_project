@@ -7,6 +7,7 @@ namespace Cauldron.Data
   {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
+    public DbSet<User> Users => Set<User>();
     public DbSet<Recipe> Recipes => Set<Recipe>();
     public DbSet<Ingredient> Ingredients => Set<Ingredient>();
     public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
