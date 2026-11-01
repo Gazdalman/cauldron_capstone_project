@@ -2,11 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Cauldron.Models;
 public class RecipeIngredient
-<<<<<<< HEAD
-{
-=======
   {
->>>>>>> dev
   public int RecipeId {get; set; }
   public Recipe? Recipe { get; set; }
 
@@ -16,4 +12,3 @@ public class RecipeIngredient
   [Required(ErrorMessage = "Quantity/Measurement is required")]
   public string Quantity { get; set; } = string.Empty;
 }
-
