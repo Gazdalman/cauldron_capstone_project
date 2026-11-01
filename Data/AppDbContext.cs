@@ -10,6 +10,7 @@ namespace Cauldron.Data
     public DbSet<User> Users => Set<User>();
     public DbSet<Recipe> Recipes => Set<Recipe>();
     public DbSet<Ingredient> Ingredients => Set<Ingredient>();
+    public DbSet<Pantry> Pantries => Set<Pantry>();
     public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,11 +36,18 @@ namespace Cauldron.Data
         .WithMany(i => i.RecipeIngredients)
         .HasForeignKey(ri => ri.IngredientId);
 
+      modelBuilder.Entity<PantryIngredient>()
+        .HasKey(pi => new {pi.PantryId, pi.IngredientId});
+
+      modelBuilder.Entity<PantryIngredient>()
+        .HasOne(pi => pi.Pantry)
+        .WithMany(p => p.PantryIngredients)
+        .HasForeignKey(pi => pi.PantryId);
+
         modelBuilder.Entity<Ingredient>()
           .HasIndex(i => i.Name)
           .IsUnique();
     }
-
 
   }
 }

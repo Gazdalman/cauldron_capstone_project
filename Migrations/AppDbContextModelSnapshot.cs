@@ -42,6 +42,47 @@ namespace Cauldron.Migrations
                     b.ToTable("Ingredients");
                 });
 
+            modelBuilder.Entity("Cauldron.Models.Pantry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Quantity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Pantries");
+                });
+
+            modelBuilder.Entity("Cauldron.Models.PantryIngredient", b =>
+                {
+                    b.Property<int>("PantryId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Quantity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("PantryId", "IngredientId");
+
+                    b.HasIndex("IngredientId");
+
+                    b.ToTable("PantryIngredient");
+                });
+
             modelBuilder.Entity("Cauldron.Models.Recipe", b =>
                 {
                     b.Property<int>("Id")
@@ -152,6 +193,36 @@ namespace Cauldron.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Cauldron.Models.Pantry", b =>
+                {
+                    b.HasOne("Cauldron.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Cauldron.Models.PantryIngredient", b =>
+                {
+                    b.HasOne("Cauldron.Models.Ingredient", "Ingredient")
+                        .WithMany()
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cauldron.Models.Pantry", "Pantry")
+                        .WithMany("PantryIngredients")
+                        .HasForeignKey("PantryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("Pantry");
+                });
+
             modelBuilder.Entity("Cauldron.Models.Recipe", b =>
                 {
                     b.HasOne("Cauldron.Models.User", "User")
@@ -185,6 +256,11 @@ namespace Cauldron.Migrations
             modelBuilder.Entity("Cauldron.Models.Ingredient", b =>
                 {
                     b.Navigation("RecipeIngredients");
+                });
+
+            modelBuilder.Entity("Cauldron.Models.Pantry", b =>
+                {
+                    b.Navigation("PantryIngredients");
                 });
 
             modelBuilder.Entity("Cauldron.Models.Recipe", b =>
