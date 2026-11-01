@@ -20,4 +20,17 @@ public class Recipe
   public int UserId { get; set; }
   public User? User { get; set; }
   public List<RecipeIngredient> Ingredients { get; set; } = new();
+
+  public IEnumerable<string> GetParsedInstructions()
+  {
+    if (string.IsNullOrWhiteSpace(Instructions)) yield break;
+    foreach (var instruction in Instructions.Split(';'))
+    {
+      var trimmed = instruction.Trim();
+      if (!string.IsNullOrEmpty(trimmed))
+      {
+        yield return trimmed;
+      }
+    }
+  }
 }

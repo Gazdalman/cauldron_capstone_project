@@ -1,0 +1,26 @@
+@page "/recipes"
+@inject RecipeService RecipeService
+
+<div>
+  @if (Recipes != null)
+  {
+    foreach (var recipe in Recipes)
+    {
+      <div>
+        <a href="/recipes/@recipe.Id">@recipe.Title</a>
+      </div>
+    }
+  }
+
+</div>
+
+@code
+{
+    private List<Recipe> Recipes ;
+
+    protected override async Task OnInitializedAsync()
+    {
+    Recipes = await RecipeService.GetAllRecipesAsync();
+  }
+
+}

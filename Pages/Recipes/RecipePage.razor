@@ -1,0 +1,45 @@
+@page "/recipes/{Id:int}"
+@inject RecipeService RecipeService
+
+<div>
+  @if (Recipe == null)
+  {
+    <p>Loading recipe...</p>
+  }
+else
+  {
+    <h2>@Recipe.Title</h2>
+    <h4>Posted by <a href="/users/@Recipe.UserId">@(Recipe.User != null ? Recipe.User.DisplayName : "Some Person")</a></h4>
+    <p class="text-muted">@Recipe.Description</p>
+
+    <hr />
+
+    <h3>Ingredients</h3>
+    <ul>
+      @foreach (RecipeIngredient ri in Recipe.Ingredients)
+      {
+        <li>@ri.Ingredient?.Name</li>
+      }
+    </ul>
+
+    <h3>Instructions</h3>
+    foreach(var (ins, index) in Recipe.GetParsedInstructions().Select((val, i) => (val, i)))
+    {
+      <p>@(index+1). @ins</p>
+    }
+
+
+    <a href="/recipes">Back to all recipes</a>
+  }
+</div>
+
+@code {
+  [Parameter] public int Id { get; set; }
+
+  private Recipe? Recipe;
+
+  protected override async Task OnInitializedAsync()
+  {
+    Recipe = await RecipeService.GetRecipeByIdAsync(Id);
+  }
+}

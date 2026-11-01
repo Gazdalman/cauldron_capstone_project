@@ -1,43 +1,49 @@
 ﻿@using Cauldron.Shared.Modals
 @inject UserSessionState UserSessionState
 <nav>
-  <h3>Cauldron</h3>
-  <div>
-    @if (UserSessionState.IsLoggedIn)
+  <h3><a href="/">Cauldron</a></h3>
+  <div class="profile-menu">
+    <i @onclick="() => Visible = !Visible" class="fa-solid fa-bars"></i>
+    @if (Visible)
     {
-      <span>Welcome, @UserSessionState.CurrentUserName!</span>
-      <button @onclick="UserSessionState.Logout">Log Out</button>
-    } else
-    {
-      <button @onclick="OpenLogin">Log In</button>
+      @if (UserSessionState.IsLoggedIn)
+      {
+        <span>Welcome, @UserSessionState.CurrentUserName!</span>
+        <button @onclick="UserSessionState.Logout">Log Out</button>
+      }
+      else
+      {
+        <button @onclick="OpenLogin">Log In</button>
+      }
     }
+  </div>
+
+  <div>
+    <a href="/recipes">Recipes</a>
   </div>
 </nav>
 
 <Modal IsOpen="IsModalOpen" OnClose="CloseModal">
   @if (currView == ModalView.Login)
   {
-    <LoginModal
-      OnSuccess="CloseModal"
-      OnSwitch="() => currView = ModalView.Register" />
+    <LoginModal OnSuccess="CloseModal" OnSwitch="() => currView = ModalView.Register" />
   }
   else if (currView == ModalView.Register)
   {
-    <RegistrationModal
-      OnSuccess="CloseModal"
-      OnSwitch="() => currView = ModalView.Login" />
+    <RegistrationModal OnSuccess="CloseModal" OnSwitch="() => currView = ModalView.Login" />
   }
 </Modal>
 
 @code {
-  private enum ModalView { Login, Register}
+  private enum ModalView { Login, Register }
   private bool IsModalOpen = false;
+  private bool Visible = false;
   private ModalView currView = ModalView.Login;
 
   private void OpenLogin()
   {
     currView = ModalView.Login;
-    IsModalOpen = true;
+    IsModalOpen = !IsModalOpen;
   }
 
   private void CloseModal()
