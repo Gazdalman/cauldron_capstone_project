@@ -27,3 +27,7 @@ Desktop.ini
 # Test Pages
 Pages/DbTest.razor
 Pages/UserTestRoute.razor
+
+# Local configuration files
+appsettings.Dev.json
+appsettings.Development.json

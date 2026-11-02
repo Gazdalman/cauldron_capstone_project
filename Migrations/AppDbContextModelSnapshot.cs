@@ -34,12 +34,210 @@ namespace Cauldron.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("NormalizedName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("NormalizedName")
                         .IsUnique();
 
                     b.ToTable("Ingredients");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "All-Purpose Flour",
+                            NormalizedName = "allpurposeflour"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Granulated Sugar",
+                            NormalizedName = "granulatedsugar"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Kosher Salt",
+                            NormalizedName = "koshersalt"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Black Pepper",
+                            NormalizedName = "blackpepper"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Olive Oil",
+                            NormalizedName = "oliveoil"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Baking Powder",
+                            NormalizedName = "bakingpowder"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Vanilla Extract",
+                            NormalizedName = "vanillaextract"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Chocolate Chips",
+                            NormalizedName = "chocolatechips"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Maple Syrup",
+                            NormalizedName = "maplesyrup"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Balsamic Vinegar",
+                            NormalizedName = "balsamicvinegar"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Large Eggs",
+                            NormalizedName = "largeeggs"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Whole Milk",
+                            NormalizedName = "wholemilk"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Unsalted Butter",
+                            NormalizedName = "unsaltedbutter"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Cheddar Cheese",
+                            NormalizedName = "cheddarcheese"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Parmesan Cheese",
+                            NormalizedName = "parmesancheese"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "Heavy Cream",
+                            NormalizedName = "heavycream"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "Bacon",
+                            NormalizedName = "bacon"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "Pork Sausage",
+                            NormalizedName = "porksausage"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "Deli Turkey",
+                            NormalizedName = "deliturkey"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Name = "Chicken Breast",
+                            NormalizedName = "chickenbreast"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Name = "Boneless Chicken Thighs",
+                            NormalizedName = "bonelesschickenthighs"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Name = "Bone-In Chicken Thighs",
+                            NormalizedName = "boneinchickenthighs"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Name = "Russet Potatoes",
+                            NormalizedName = "russetpotatoes"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Name = "Garlic",
+                            NormalizedName = "garlic"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Name = "Yellow Onion",
+                            NormalizedName = "yellowonion"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Name = "Romaine Lettuce",
+                            NormalizedName = "romainelettuce"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Name = "Tomatoes",
+                            NormalizedName = "tomatoes"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Name = "Asparagus",
+                            NormalizedName = "asparagus"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Name = "Lemons",
+                            NormalizedName = "lemons"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Name = "Sourdough Bread",
+                            NormalizedName = "sourdoughbread"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Name = "Croutons",
+                            NormalizedName = "croutons"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Name = "Coffee Beans",
+                            NormalizedName = "coffeebeans"
+                        });
                 });
 
             modelBuilder.Entity("Cauldron.Models.Pantry", b =>
@@ -95,6 +293,10 @@ namespace Cauldron.Migrations
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Instructions")
                         .IsRequired()

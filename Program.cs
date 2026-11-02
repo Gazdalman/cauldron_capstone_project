@@ -1,3 +1,5 @@
+using Amazon.S3;
+using Amazon.Runtime;
 using Cauldron.Data;
 using Cauldron.Models;
 using Cauldron.Services;
@@ -5,8 +7,14 @@ using Cauldron.State;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var awsOptions = builder.Configuration.GetSection("AWS");
+var region = Amazon.RegionEndpoint.GetBySystemName(awsOptions["Region"]);
+var credentials = new BasicAWSCredentials(awsOptions["AccessKey"], awsOptions["SecretKey"]);
 
 // Add services to the container.
+builder.Services.AddSingleton<IAmazonS3>(new AmazonS3Client(credentials, region));
+builder.Services.AddScoped<S3Service>();
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 

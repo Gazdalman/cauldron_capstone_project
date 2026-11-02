@@ -10,6 +10,8 @@ public class Recipe
   [StringLength(100, MinimumLength = 10, ErrorMessage = "Title must be between 10 and 100 characters!")]
   public string Title { get; set; } = string.Empty;
 
+  public string ImageUrl { get; set; } = string.Empty;
+  
   [Required(ErrorMessage = "Recipe must have a description!")]
   [StringLength(250, ErrorMessage = "Description must be under 250 characters!")]
   public string Description { get; set; } = string.Empty;

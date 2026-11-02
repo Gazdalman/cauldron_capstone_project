@@ -8,5 +8,8 @@ public class Ingredient
   [Required]
   public string Name { get; set; } = string.Empty;
 
+  public string NormalizedName { get; set; } = string.Empty;
+  
+
   public List<RecipeIngredient> RecipeIngredients { get; set; } = new();
 }

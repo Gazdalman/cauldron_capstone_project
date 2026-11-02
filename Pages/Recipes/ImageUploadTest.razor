@@ -1,0 +1,55 @@
+@page "/test-upload"
+@inject S3Service S3Service
+
+<div style="border: 2px dashed #ccc; padding: 20px; border-radius: 8px; max-width: 400px; text-align: center;">
+    <h3>S3 Test Upload</h3>
+
+    <!-- Blazor's native file input -->
+    <InputFile OnChange="HandleFileSelected" accept="image/*" />
+
+    @if (isUploading)
+    {
+        <p style="color: blue; margin-top: 10px;">Uploading to S3...</p>
+    }
+
+    @if (!string.IsNullOrEmpty(uploadedUrl))
+    {
+        <div style="margin-top: 15px;">
+            <p style="color: green; font-weight: bold;">Upload Successful!</p>
+            <p style="word-break: break-all; font-size: 0.85rem;"><a href="@uploadedUrl" target="_blank">@uploadedUrl</a></p>
+
+            <img src="@uploadedUrl" alt="S3 Upload Preview" style="max-width: 100%; max-height: 200px; border-radius: 4px; margin-top: 10px;" />
+        </div>
+    }
+</div>
+
+@code {
+    private bool isUploading = false;
+    private string uploadedUrl = string.Empty;
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+
+        isUploading = true;
+        uploadedUrl = string.Empty;
+
+        try
+        {
+            // Open stream with a 5MB size guard
+            using var stream = file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024);
+
+            // Calls your S3Service we set up
+            uploadedUrl = await S3Service.UploadFileAsync(stream, file.Name, file.ContentType);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Test upload failed:{ex.Message}");
+        }
+        finally
+        {
+            isUploading = false;
+        }
+    }
+}

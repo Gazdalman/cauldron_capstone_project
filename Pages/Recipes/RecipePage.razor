@@ -4,7 +4,7 @@
 <div>
   @if (Recipe == null)
   {
-    <p>Loading recipe...</p>
+    <p class="loading-msg">Loading recipe...</p>
   }
 else
   {
@@ -27,8 +27,7 @@ else
     {
       <p>@(index+1). @ins</p>
     }
-
-
+    
     <a href="/recipes">Back to all recipes</a>
   }
 </div>
