@@ -2,10 +2,6 @@
 @inject UserService UserService
 <PageTitle>Cauldron - Dashboard</PageTitle>
 
-<div>
-  <button @onclick="MakeDemo">Click here</button>
-</div>
-
 @* <div class="p-5 mb-4 bg-light rounded-3 shadow-sm"> *@
     @* <div class="container-fluid py-3">
         <h1 class="display-5 fw-bold text-dark">Cauldron Kitchen Dashboard 🍲</h1>
@@ -18,19 +14,3 @@
         </div>
     </div>
 </div> *@
-
-@code {
-  private async Task MakeDemo()
-  {
-    RegistrationDto? dto = new RegistrationDto
-    {
-      Password = "Password",
-      UserName = "demoUser",
-      Email = "demo@test.io"
-    };
-
-    await UserService.RegisterUserAsync(dto);
-  }
-
-
-}
