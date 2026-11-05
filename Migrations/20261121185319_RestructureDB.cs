@@ -7,24 +7,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cauldron.Migrations
 {
     /// <inheritdoc />
-    public partial class ReinitializeDB : Migration
+    public partial class RestructureDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Ingredients",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ingredients", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -53,12 +40,33 @@ namespace Cauldron.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Pantries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Quantity = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pantries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pantries_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Recipes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    ImageUrl = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     Instructions = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false)
@@ -75,22 +83,39 @@ namespace Cauldron.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipeIngredients",
+                name: "PantryIngredients",
                 columns: table => new
                 {
-                    RecipeId = table.Column<int>(type: "integer", nullable: false),
-                    IngredientId = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PantryId = table.Column<int>(type: "integer", nullable: false),
+                    Ingredient = table.Column<string>(type: "text", nullable: false),
                     Quantity = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecipeIngredients", x => new { x.RecipeId, x.IngredientId });
+                    table.PrimaryKey("PK_PantryIngredients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RecipeIngredients_Ingredients_IngredientId",
-                        column: x => x.IngredientId,
-                        principalTable: "Ingredients",
+                        name: "FK_PantryIngredients_Pantries_PantryId",
+                        column: x => x.PantryId,
+                        principalTable: "Pantries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecipeIngredients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RecipeId = table.Column<int>(type: "integer", nullable: false),
+                    Ingredient = table.Column<string>(type: "text", nullable: false),
+                    Quantity = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecipeIngredients", x => x.Id);
                     table.ForeignKey(
                         name: "FK_RecipeIngredients_Recipes_RecipeId",
                         column: x => x.RecipeId,
@@ -100,15 +125,20 @@ namespace Cauldron.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ingredients_Name",
-                table: "Ingredients",
-                column: "Name",
+                name: "IX_Pantries_UserId",
+                table: "Pantries",
+                column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredients_IngredientId",
+                name: "IX_PantryIngredients_PantryId",
+                table: "PantryIngredients",
+                column: "PantryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecipeIngredients_RecipeId",
                 table: "RecipeIngredients",
-                column: "IngredientId");
+                column: "RecipeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_UserId",
@@ -120,10 +150,13 @@ namespace Cauldron.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "PantryIngredients");
+
+            migrationBuilder.DropTable(
                 name: "RecipeIngredients");
 
             migrationBuilder.DropTable(
-                name: "Ingredients");
+                name: "Pantries");
 
             migrationBuilder.DropTable(
                 name: "Recipes");

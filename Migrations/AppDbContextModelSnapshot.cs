@@ -22,224 +22,6 @@ namespace Cauldron.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Cauldron.Models.Ingredient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("NormalizedName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique();
-
-                    b.ToTable("Ingredients");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "All-Purpose Flour",
-                            NormalizedName = "allpurposeflour"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Granulated Sugar",
-                            NormalizedName = "granulatedsugar"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Kosher Salt",
-                            NormalizedName = "koshersalt"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Black Pepper",
-                            NormalizedName = "blackpepper"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Olive Oil",
-                            NormalizedName = "oliveoil"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Baking Powder",
-                            NormalizedName = "bakingpowder"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Vanilla Extract",
-                            NormalizedName = "vanillaextract"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Chocolate Chips",
-                            NormalizedName = "chocolatechips"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Maple Syrup",
-                            NormalizedName = "maplesyrup"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Balsamic Vinegar",
-                            NormalizedName = "balsamicvinegar"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "Large Eggs",
-                            NormalizedName = "largeeggs"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Whole Milk",
-                            NormalizedName = "wholemilk"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Name = "Unsalted Butter",
-                            NormalizedName = "unsaltedbutter"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Name = "Cheddar Cheese",
-                            NormalizedName = "cheddarcheese"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Name = "Parmesan Cheese",
-                            NormalizedName = "parmesancheese"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Name = "Heavy Cream",
-                            NormalizedName = "heavycream"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Name = "Bacon",
-                            NormalizedName = "bacon"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Name = "Pork Sausage",
-                            NormalizedName = "porksausage"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            Name = "Deli Turkey",
-                            NormalizedName = "deliturkey"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            Name = "Chicken Breast",
-                            NormalizedName = "chickenbreast"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            Name = "Boneless Chicken Thighs",
-                            NormalizedName = "bonelesschickenthighs"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            Name = "Bone-In Chicken Thighs",
-                            NormalizedName = "boneinchickenthighs"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            Name = "Russet Potatoes",
-                            NormalizedName = "russetpotatoes"
-                        },
-                        new
-                        {
-                            Id = 24,
-                            Name = "Garlic",
-                            NormalizedName = "garlic"
-                        },
-                        new
-                        {
-                            Id = 25,
-                            Name = "Yellow Onion",
-                            NormalizedName = "yellowonion"
-                        },
-                        new
-                        {
-                            Id = 26,
-                            Name = "Romaine Lettuce",
-                            NormalizedName = "romainelettuce"
-                        },
-                        new
-                        {
-                            Id = 27,
-                            Name = "Tomatoes",
-                            NormalizedName = "tomatoes"
-                        },
-                        new
-                        {
-                            Id = 28,
-                            Name = "Asparagus",
-                            NormalizedName = "asparagus"
-                        },
-                        new
-                        {
-                            Id = 29,
-                            Name = "Lemons",
-                            NormalizedName = "lemons"
-                        },
-                        new
-                        {
-                            Id = 30,
-                            Name = "Sourdough Bread",
-                            NormalizedName = "sourdoughbread"
-                        },
-                        new
-                        {
-                            Id = 31,
-                            Name = "Croutons",
-                            NormalizedName = "croutons"
-                        },
-                        new
-                        {
-                            Id = 32,
-                            Name = "Coffee Beans",
-                            NormalizedName = "coffeebeans"
-                        });
-                });
-
             modelBuilder.Entity("Cauldron.Models.Pantry", b =>
                 {
                     b.Property<int>("Id")
@@ -257,28 +39,36 @@ namespace Cauldron.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Pantries");
                 });
 
             modelBuilder.Entity("Cauldron.Models.PantryIngredient", b =>
                 {
-                    b.Property<int>("PantryId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    b.Property<int>("IngredientId")
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Ingredient")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PantryId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Quantity")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("PantryId", "IngredientId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("IngredientId");
+                    b.HasIndex("PantryId");
 
-                    b.ToTable("PantryIngredient");
+                    b.ToTable("PantryIngredients");
                 });
 
             modelBuilder.Entity("Cauldron.Models.Recipe", b =>
@@ -319,19 +109,26 @@ namespace Cauldron.Migrations
 
             modelBuilder.Entity("Cauldron.Models.RecipeIngredient", b =>
                 {
-                    b.Property<int>("RecipeId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    b.Property<int>("IngredientId")
-                        .HasColumnType("integer");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Ingredient")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Quantity")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("RecipeId", "IngredientId");
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("IngredientId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("RecipeIngredients");
                 });
@@ -398,8 +195,8 @@ namespace Cauldron.Migrations
             modelBuilder.Entity("Cauldron.Models.Pantry", b =>
                 {
                     b.HasOne("Cauldron.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("Pantry")
+                        .HasForeignKey("Cauldron.Models.Pantry", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -408,19 +205,11 @@ namespace Cauldron.Migrations
 
             modelBuilder.Entity("Cauldron.Models.PantryIngredient", b =>
                 {
-                    b.HasOne("Cauldron.Models.Ingredient", "Ingredient")
-                        .WithMany()
-                        .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Cauldron.Models.Pantry", "Pantry")
                         .WithMany("PantryIngredients")
                         .HasForeignKey("PantryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Ingredient");
 
                     b.Navigation("Pantry");
                 });
@@ -438,26 +227,13 @@ namespace Cauldron.Migrations
 
             modelBuilder.Entity("Cauldron.Models.RecipeIngredient", b =>
                 {
-                    b.HasOne("Cauldron.Models.Ingredient", "Ingredient")
-                        .WithMany("RecipeIngredients")
-                        .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Cauldron.Models.Recipe", "Recipe")
                         .WithMany("Ingredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Ingredient");
-
                     b.Navigation("Recipe");
-                });
-
-            modelBuilder.Entity("Cauldron.Models.Ingredient", b =>
-                {
-                    b.Navigation("RecipeIngredients");
                 });
 
             modelBuilder.Entity("Cauldron.Models.Pantry", b =>
@@ -472,6 +248,8 @@ namespace Cauldron.Migrations
 
             modelBuilder.Entity("Cauldron.Models.User", b =>
                 {
+                    b.Navigation("Pantry");
+
                     b.Navigation("Recipes");
                 });
 #pragma warning restore 612, 618

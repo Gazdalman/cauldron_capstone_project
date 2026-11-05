@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cauldron.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261029173828_ReinitializeDB")]
-    partial class ReinitializeDB
+    [Migration("20261121185319_RestructureDB")]
+    partial class RestructureDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Cauldron.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Cauldron.Models.Ingredient", b =>
+            modelBuilder.Entity("Cauldron.Models.Pantry", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,16 +33,45 @@ namespace Cauldron.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Quantity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Pantries");
+                });
+
+            modelBuilder.Entity("Cauldron.Models.PantryIngredient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Ingredient")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PantryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Quantity")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("PantryId");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("PantryIngredients");
                 });
 
             modelBuilder.Entity("Cauldron.Models.Recipe", b =>
@@ -57,6 +86,10 @@ namespace Cauldron.Migrations
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Instructions")
                         .IsRequired()
@@ -79,19 +112,26 @@ namespace Cauldron.Migrations
 
             modelBuilder.Entity("Cauldron.Models.RecipeIngredient", b =>
                 {
-                    b.Property<int>("RecipeId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    b.Property<int>("IngredientId")
-                        .HasColumnType("integer");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Ingredient")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Quantity")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("RecipeId", "IngredientId");
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("IngredientId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("RecipeIngredients");
                 });
@@ -155,6 +195,28 @@ namespace Cauldron.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Cauldron.Models.Pantry", b =>
+                {
+                    b.HasOne("Cauldron.Models.User", "User")
+                        .WithOne("Pantry")
+                        .HasForeignKey("Cauldron.Models.Pantry", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Cauldron.Models.PantryIngredient", b =>
+                {
+                    b.HasOne("Cauldron.Models.Pantry", "Pantry")
+                        .WithMany("PantryIngredients")
+                        .HasForeignKey("PantryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pantry");
+                });
+
             modelBuilder.Entity("Cauldron.Models.Recipe", b =>
                 {
                     b.HasOne("Cauldron.Models.User", "User")
@@ -168,26 +230,18 @@ namespace Cauldron.Migrations
 
             modelBuilder.Entity("Cauldron.Models.RecipeIngredient", b =>
                 {
-                    b.HasOne("Cauldron.Models.Ingredient", "Ingredient")
-                        .WithMany("RecipeIngredients")
-                        .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Cauldron.Models.Recipe", "Recipe")
                         .WithMany("Ingredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Ingredient");
-
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("Cauldron.Models.Ingredient", b =>
+            modelBuilder.Entity("Cauldron.Models.Pantry", b =>
                 {
-                    b.Navigation("RecipeIngredients");
+                    b.Navigation("PantryIngredients");
                 });
 
             modelBuilder.Entity("Cauldron.Models.Recipe", b =>
@@ -197,6 +251,8 @@ namespace Cauldron.Migrations
 
             modelBuilder.Entity("Cauldron.Models.User", b =>
                 {
+                    b.Navigation("Pantry");
+
                     b.Navigation("Recipes");
                 });
 #pragma warning restore 612, 618

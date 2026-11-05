@@ -1,0 +1,33 @@
+@using System.ComponentModel
+<div>
+  @for (int i = 0;  i < RowCount; i++)
+  {
+    <div>
+      Row @(i + 1)
+      <input />
+      @if (RowCount > 1)
+      {
+        <button @onclick="RemoveRow">X</button>
+      }
+      @if (i == RowCount - 1)
+      {
+        <button @onclick="AddRow">Add Row</button>
+      }
+    </div>
+  }
+
+</div>
+
+@code {
+  private int RowCount = 1;
+
+  private void AddRow()
+  {
+    RowCount++;
+  }
+
+  private void RemoveRow()
+  {
+    RowCount--;
+  }
+}

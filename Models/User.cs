@@ -7,4 +7,5 @@ public class User : IdentityUser
   public int Id {set; get; }
   public string DisplayName { get; set; } = string.Empty;
   public List<Recipe> Recipes { get; set; } = new();
+  public Pantry? Pantry {get; set; } = new();
 }

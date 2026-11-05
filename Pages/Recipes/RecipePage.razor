@@ -18,7 +18,7 @@ else
     <ul>
       @foreach (RecipeIngredient ri in Recipe.Ingredients)
       {
-        <li>@ri.Ingredient?.Name</li>
+        <li>@ri.Quantity @ri.Ingredient</li>
       }
     </ul>
 
@@ -27,7 +27,7 @@ else
     {
       <p>@(index+1). @ins</p>
     }
-    
+
     <a href="/recipes">Back to all recipes</a>
   }
 </div>

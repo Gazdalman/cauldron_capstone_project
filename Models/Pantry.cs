@@ -9,7 +9,7 @@ public class Pantry
   public string Quantity { get; set; } = string.Empty;
 
   public int UserId { get; set; }
-  public User? User { get; set; }
+  public User User { get; set; }
   public List<PantryIngredient> PantryIngredients { get; set; } = new();
 
 }

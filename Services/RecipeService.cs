@@ -15,8 +15,7 @@ public class RecipeService
   public async Task<List<Recipe>> GetAllRecipesAsync()
   {
     var recipes = await _context.Recipes
-    .Include(r => r.Ingredients)          // Pulls the RecipeIngredients join table
-      .ThenInclude(ri => ri.Ingredient).ToListAsync();
+      .Include(ri => ri.Ingredients).ToListAsync();
     return recipes;
   }
 
