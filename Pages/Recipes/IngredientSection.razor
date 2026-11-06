@@ -1,40 +1,40 @@
-<div >
-  <div>
-    @foreach (var (ingredient, index) in ingredients.Select((ingredient, index) => (ingredient, index)))
-    {
-      <div>
-        @(index + 1).
-
-        <input
-          type="text"
-          placeholder="Amount"
-          value="@ingredient.Amount"
-          @oninput="e => OnAmountChange(index, e.Value?.ToString())" />
-
-        <select
-          value="@ingredient.Unit"
-          @onchange="e => OnUnitChange(index, e.Value?.ToString())">
-          <option value="">Unit...</option>
-          @foreach (var unit in units)
-          {
-            <option value="@unit">@unit</option>
-          }
-        </select>
-
-        <input
-          type="text"
-          placeholder="Ingredient Name"
-          value="@ingredient.Ingredient"
-          @oninput="e => OnIngredientChange(index, e.Value?.ToString())" />
-
-      </div>
-    }
-  </div>
-
-  <button
-    @onclick="AddRow">
-    Add Row
-  </button>
+<div>
+  @foreach (var (ingredient, index) in ingredients.Select((ingredient, index) => (ingredient, index)))
+  {
+    <div>
+      @(index + 1).
+      <input
+        placeholder="Amount"
+        value="@ingredient.Amount"
+        @oninput="e => OnAmountChange(index, e.Value?.ToString())" />
+      <select
+        value="@ingredient.Unit"
+        @onchange="e => OnUnitChange(index, e.Value?.ToString())">
+        <option value="">Unit...</option>
+        @foreach (var unit in units)
+        {
+          <option value="@unit">@unit</option>
+        }
+      </select>
+      <input
+        placeholder="Ingredient Name"
+        value="@ingredient.Ingredient"
+        @oninput="e => OnIngredientChange(index, e.Value?.ToString())" />
+      @if (ingredients.Count > 1)
+      {
+        <button @onclick="() => RemoveRow(index)">X</button>
+        @if (index > 0)
+        {
+          <button @onclick="() => MoveRow(-1, index)">Up</button>
+        }
+        if (index != ingredients.Count - 1)
+        {
+          <button @onclick="() => MoveRow(1, index)">Down</button>
+        }
+      }
+    </div>
+  }
+  <button @onclick="AddRow">Add Row</button>
 </div>
 @code {
   private List<IngredientRow> ingredients = new() { new() };
