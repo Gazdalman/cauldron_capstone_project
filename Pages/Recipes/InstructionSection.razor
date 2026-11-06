@@ -1,33 +1,65 @@
 @using System.ComponentModel
 <div>
-  @for (int i = 0;  i < RowCount; i++)
+  @foreach (var (step, index) in steps.Select((step, index) => (step, index)))
   {
     <div>
-      Row @(i + 1)
-      <input />
-      @if (RowCount > 1)
+      Step @(index + 1):
+      <input
+      value="@steps[index]"
+      @oninput="e => OnChange(index, e.Value?.ToString())"/>
+      @if (steps.Count > 1)
       {
-        <button @onclick="RemoveRow">X</button>
+        <button @onclick="() => RemoveRow(index)">X</button>
+        @if (index > 0)
+        {
+          <button
+          @onclick="() => MoveRow(-1, index)">Up</button>
+
+        }
+        if (index != steps.Count - 1)
+        {
+          <button
+          @onclick="() => MoveRow(1, index)">Down</button>
+        }
       }
-      @if (i == RowCount - 1)
-      {
-        <button @onclick="AddRow">Add Row</button>
-      }
+
     </div>
   }
+    <button @onclick="AddRow">Add Row</button>
 
 </div>
 
 @code {
-  private int RowCount = 1;
+  private List<string> steps = new() {string.Empty };
 
+  private void OnChange(int index, string val)
+  {
+    steps[index] = val;
+  }
   private void AddRow()
   {
-    RowCount++;
+    steps.Add(string.Empty);
   }
 
-  private void RemoveRow()
+  private void RemoveRow(int index)
   {
-    RowCount--;
+    steps.RemoveAt(index);
+  }
+
+  private void MoveRow(int dir, int index)
+  {
+    string val;
+    if (dir < 0)
+    {
+      val = steps[index - 1];
+      steps[index-1] = steps[index];
+      steps[index] = val;
+    }
+    else
+    {
+      val = steps[index + 1];
+      steps[index + 1] = steps[index];
+      steps[index] = val;
+    }
   }
 }

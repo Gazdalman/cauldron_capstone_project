@@ -48,8 +48,8 @@
   [Parameter] public EventCallback OnSuccess { get; set; }
   [Parameter] public EventCallback OnSwitch { get; set; }
 
-  private RegistrationDto dto = new RegistrationDto();
-  private RegistrationResult result = new RegistrationResult();
+  private RegistrationDto dto = new ();
+  private RegistrationResult result = new ();
 
   private string loginCredential = "";
   private string loginPassword = "";
