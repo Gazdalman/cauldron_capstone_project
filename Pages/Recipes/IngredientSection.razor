@@ -1,33 +1,90 @@
-@using System.ComponentModel
-<div>
-  @for (int i = 0;  i < RowCount; i++)
+<div >
+  <div>
+    @foreach (var (ingredient, index) in ingredients.Select((ingredient, index) => (ingredient, index)))
+    {
+      <div>
+        @(index + 1).
+
+        <input
+          type="text"
+          placeholder="Amount"
+          value="@ingredient.Amount"
+          @oninput="e => OnAmountChange(index, e.Value?.ToString())" />
+
+        <select
+          value="@ingredient.Unit"
+          @onchange="e => OnUnitChange(index, e.Value?.ToString())">
+          <option value="">Unit...</option>
+          @foreach (var unit in units)
+          {
+            <option value="@unit">@unit</option>
+          }
+        </select>
+
+        <input
+          type="text"
+          placeholder="Ingredient Name"
+          value="@ingredient.Ingredient"
+          @oninput="e => OnIngredientChange(index, e.Value?.ToString())" />
+
+      </div>
+    }
+  </div>
+
+  <button
+    @onclick="AddRow">
+    Add Row
+  </button>
+</div>
+@code {
+  private List<IngredientRow> ingredients = new() { new() };
+
+private readonly List<string> units = new()
   {
-    <div>
-      Row @(i + 1)
-      <input />
-      @if (RowCount > 1)
-      {
-        <button @onclick="RemoveRow">X</button>
-      }
-      @if (i == RowCount - 1)
-      {
-        <button @onclick="AddRow">Add Row</button>
-      }
-    </div>
+    "g", "kg", "oz", "fl oz","lb", "ml", "l",
+    "tsp", "tbsp", "cup", "whole", "clove", "slice", "can", "pinch", "head", "leaf"
+  };
+
+  private class IngredientRow
+  {
+    public string Amount { get; set; } = string.Empty;
+    public string Unit { get; set; } = string.Empty;
+    public string Ingredient { get; set; } = string.Empty;
   }
 
-</div>
+  private void OnAmountChange(int index, string? val)
+  {
+    ingredients[index].Amount = val ?? string.Empty;
+  }
 
-@code {
-  private int RowCount = 1;
+  private void OnUnitChange(int index, string? val)
+  {
+    ingredients[index].Unit = val ?? string.Empty;
+  }
 
+  private void OnIngredientChange(int index, string? val)
+  {
+    ingredients[index].Ingredient = val ?? string.Empty;
+  }
   private void AddRow()
   {
-    RowCount++;
+    ingredients.Add(new());
   }
 
-  private void RemoveRow()
+  private void RemoveRow(int index)
   {
-    RowCount--;
+    ingredients.RemoveAt(index);
+  }
+
+  private async void MoveRow(int dir, int index)
+  {
+    if (dir < 0 )
+    {
+      (ingredients[index - 1], ingredients[index]) = (ingredients[index], ingredients[index - 1]);
+    }
+    else if (dir > 0)
+    {
+      (ingredients[index + 1], ingredients[index]) = (ingredients[index], ingredients[index + 1]);
+    }
   }
 }

@@ -1,12 +1,14 @@
 @page "/recipes/new"
 
 <div>
-  <h2>Create Recipe</h2>
-    <h3>Ingredients</h3>
-    <IngredientSection />
-    <h3>Instructions</h3>
-    <InstructionSection />
-</div>
-@code {
+  <h2 >Create Recipe</h2>
 
+      <h3>Ingredients</h3>
+      <IngredientSection/>
+      <h3>Instructions</h3>
+      <InstructionSection  />
+</div>
+
+@code {
+  private RecipeCreationDto dto = new();
 }
