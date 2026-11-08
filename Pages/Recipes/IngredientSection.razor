@@ -1,43 +1,74 @@
-<div>
-  @foreach (var (ingredient, index) in ingredients.Select((ingredient, index) => (ingredient, index)))
-  {
-    <div>
-      @(index + 1).
-      <input
-        placeholder="Amount"
-        value="@ingredient.Amount"
-        @oninput="e => OnAmountChange(index, e.Value?.ToString())" />
-      <select
-        value="@ingredient.Unit"
-        @onchange="e => OnUnitChange(index, e.Value?.ToString())">
-        <option value="">Unit...</option>
-        @foreach (var unit in units)
+<div class="ingredient-section">
+  <div class="ingredient-rows">
+    @foreach (var (ingredient, index) in ingredients.Select((ingredient, index) => (ingredient, index)))
+    {
+
+      <div class="ingredient-row">
+        <span class="ingredient-row-number">@(index + 1).</span>
+
+        <input
+          type="text"
+          class="ingredient-input ingredient-amount"
+          placeholder="Amount"
+          value="@ingredient.Amount"
+          @oninput="e => OnAmountChange(index, e.Value?.ToString())" />
+
+        <select
+          class="ingredient-select ingredient-unit"
+          value="@ingredient.Unit"
+          @onchange="e => OnUnitChange(index, e.Value?.ToString())">
+          <option value="">Unit...</option>
+          @foreach (var unit in units)
+          {
+            <option value="@unit">@unit</option>
+          }
+        </select>
+
+        <input
+          type="text"
+          class="ingredient-input ingredient-name"
+          placeholder="Ingredient Name"
+          value="@ingredient.Ingredient"
+          @oninput="e => OnIngredientChange(index, e.Value?.ToString())" />
+
+        @if (ingredients.Count > 1)
         {
-          <option value="@unit">@unit</option>
+          <div class="ingredient-row-actions">
+            <button
+                class="row-btn"
+                @onclick="() => RemoveRow(index)">
+              X
+            </button>
+
+            <button
+                class="row-btn"
+                disabled="@(index == 0)"
+                @onclick="() => MoveRow(-1, index)">
+              Up
+            </button>
+
+            <button
+              class="row-btn"
+              disabled="@(index == ingredients.Count - 1)"
+              @onclick="() => MoveRow(1, index)">
+              Down
+            </button>
+          </div>
         }
-      </select>
-      <input
-        placeholder="Ingredient Name"
-        value="@ingredient.Ingredient"
-        @oninput="e => OnIngredientChange(index, e.Value?.ToString())" />
-      @if (ingredients.Count > 1)
-      {
-        <button @onclick="() => RemoveRow(index)">X</button>
-        @if (index > 0)
-        {
-          <button @onclick="() => MoveRow(-1, index)">Up</button>
-        }
-        if (index != ingredients.Count - 1)
-        {
-          <button @onclick="() => MoveRow(1, index)">Down</button>
-        }
-      }
-    </div>
-  }
-  <button @onclick="AddRow">Add Row</button>
+      </div>
+    }
+  </div>
+
+  <button
+          class="add-row-btn"
+          @onclick="AddRow">
+    Add Row
+  </button>
 </div>
 @code {
   private List<IngredientRow> ingredients = new() { new() };
+  private int? movedRowIndex;
+  private int moveDirection;
 
 private readonly List<string> units = new()
   {
