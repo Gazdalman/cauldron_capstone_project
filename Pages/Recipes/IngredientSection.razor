@@ -77,10 +77,11 @@
 </div>
 @code {
   private List<IngredientRow> ingredients = new() { new() };
+  public sealed record IngredientSubmission(string Quantity, string Name);
   private int? movedRowIndex;
   private int moveDirection;
 
-private readonly List<string> units = new()
+  private readonly List<string> units = new()
   {
     "g", "kg", "oz", "fl oz","lb", "ml", "l",
     "tsp", "tbsp", "cup", "whole", "clove", "slice", "can", "pinch", "head", "leaf"
@@ -150,6 +151,10 @@ private readonly List<string> units = new()
   {
     return ingredients.Any(i =>
     {
+      if (ingredients.Count < 1)
+      {
+        return true;
+      }
       bool hasAmount = !string.IsNullOrWhiteSpace(i.Amount);
       bool hasUnit = !string.IsNullOrWhiteSpace(i.Unit);
       bool hasIngredient = !string.IsNullOrWhiteSpace(i.Ingredient);
@@ -159,5 +164,27 @@ private readonly List<string> units = new()
 
       return anyFilled && !completeEnough;
     });
+  }
+
+  public List<RecipeIngredient> GetIngredients()
+  {
+    return ingredients
+      .Where(i => !string.IsNullOrWhiteSpace(i.Amount)
+                || !string.IsNullOrWhiteSpace(i.Unit)
+                || !string.IsNullOrWhiteSpace(i.Ingredient))
+      .Select(i =>
+      {
+        var amount = i.Amount?.Trim() ?? string.Empty;
+        var unit = i.Unit?.Trim() ?? string.Empty;
+        var quantity = string.Join(" ", new[] { amount, unit }.Where(s => !string.IsNullOrWhiteSpace(s)));
+        var name = i.Ingredient?.Trim() ?? string.Empty;
+
+        return new RecipeIngredient
+        {
+          Quantity = quantity,
+          Ingredient = name
+        };
+      })
+      .ToList();
   }
 }

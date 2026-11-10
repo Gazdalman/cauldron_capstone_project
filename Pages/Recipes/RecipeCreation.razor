@@ -1,4 +1,5 @@
 @page "/recipes/new"
+@inject RecipeService RecipeService
 
 <div class="recipe-creation-page">
   <h2 class="recipe-creation-title">Create Recipe</h2>
@@ -25,6 +26,11 @@
       <ValidationMessage For="@(() => dto.Description)" class="validation-message" />
     </div>
 
+    @if (!string.IsNullOrWhiteSpace(sectionValidationError))
+    {
+      <div class="validation-message">@sectionValidationError</div>
+    }
+
     <section class="form-section" aria-labelledby="ingredients-heading">
       <h3 id="ingredients-heading" class="section-heading">Ingredients</h3>
       <IngredientSection @ref="ingredientSection" />
@@ -39,7 +45,7 @@
       <button type="button"
         id="check-ingredients-btn"
         class="btn-secondary"
-        @onclick="Happy">
+        @onclick="HandleValidSubmit">
         Hello
       </button>
     </div>
@@ -47,19 +53,30 @@
 </div>
 
 @code {
+  private string? sectionValidationError;
   private RecipeCreationDto dto = new();
   private IngredientSection? ingredientSection;
   private InstructionSection? instructionSection;
 
-  private void Happy()
+  private async Task HandleValidSubmit()
   {
-    if (ingredientSection?.HasIncompleteRows() == true)
+    var isInvalid = ingredientSection?.HasIncompleteRows() ?? false;
+    var hasSteps = instructionSection?.HasSteps() ?? false;
+
+    if (isInvalid || !hasSteps)
     {
-      Console.WriteLine("NotHappy");
+      sectionValidationError = (isInvalid && !hasSteps)
+        ? "Please add at least one ingredient and one instruction step or ensure ingredients have amount and ingredient listed."
+        : isInvalid
+          ? "Please add at least one ingredient or ensure ingredients have amount and ingredient listed."
+          : "Please add at least one instruction step.";
+      return;
     }
-    else
-    {
-      Console.WriteLine("Happy");
-    }
+
+    sectionValidationError = null;
+    string instructions = instructionSection?.GetInstructions() ?? string.Empty;
+    dto.Instructions = instructions;
+
+    await RecipeService.CreateRecipeAsync(dto);
   }
 }

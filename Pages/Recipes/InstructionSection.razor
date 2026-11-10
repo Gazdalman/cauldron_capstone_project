@@ -104,4 +104,15 @@
       StateHasChanged();
     }
   }
+
+  public bool HasSteps()
+{
+  return steps.Any(s => !string.IsNullOrWhiteSpace(s));
+}
+  public string GetInstructions()
+{
+  return string.Join("; ", steps
+    .Select(s => s?.Trim() ?? string.Empty)
+    .Where(s => !string.IsNullOrWhiteSpace(s)));
+}
 }
