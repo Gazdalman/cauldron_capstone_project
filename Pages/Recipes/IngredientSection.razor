@@ -2,9 +2,11 @@
   <div class="ingredient-rows">
     @foreach (var (ingredient, index) in ingredients.Select((ingredient, index) => (ingredient, index)))
     {
+      var moveClass = index == movedRowIndex
+        ? (moveDirection < 0 ? "row-moved-up" : "row-moved-down")
+        : string.Empty;
 
-
-      <div id="ingredient-row-@(index + 1)" class="ingredient-row">
+      <div id="ingredient-row-@(index + 1)" class="ingredient-row @moveClass">
         <span class="ingredient-row-number">@(index + 1).</span>
 
         <label for="ingredient-amount-@(index + 1)" class="sr-only">Amount</label>
@@ -17,9 +19,9 @@
 
         <label for="ingredient-unit-@(index + 1)" class="sr-only">Unit</label>
         <select id="ingredient-unit-@(index + 1)"
-          class="ingredient-select ingredient-unit"
-          value="@ingredient.Unit"
-          @onchange="e => OnUnitChange(index, e.Value?.ToString())">
+                class="ingredient-select ingredient-unit"
+                value="@ingredient.Unit"
+                @onchange="e => OnUnitChange(index, e.Value?.ToString())">
           <option value="">Unit...</option>
           @foreach (var unit in units)
           {
@@ -29,32 +31,34 @@
 
         <label for="ingredient-name-@(index + 1)" class="sr-only">Ingredient Name</label>
         <input id="ingredient-name-@(index + 1)"
-          type="text"
-          class="ingredient-input ingredient-name"
-          placeholder="Ingredient Name"
-          value="@ingredient.Ingredient"
-          @oninput="e => OnIngredientChange(index, e.Value?.ToString())" />
+               type="text"
+               class="ingredient-input ingredient-name"
+               placeholder="Ingredient Name"
+               value="@ingredient.Ingredient"
+               @oninput="e => OnIngredientChange(index, e.Value?.ToString())" />
 
         @if (ingredients.Count > 1)
         {
           <div class="ingredient-row-actions">
             <button type="button"
-              class="row-btn row-btn-remove"
-              aria-label="Remove ingredient @(index + 1)"
-              @onclick="() => RemoveRow(index)">
+                    class="row-btn row-btn-remove"
+                    aria-label="Remove ingredient @(index + 1)"
+                    @onclick="() => RemoveRow(index)">
               X
             </button>
 
             <button type="button"
-              class="row-btn row-btn-move"
-              disabled="@(index == 0)"
-              @onclick="() => MoveRow(-1, index)">
+                    class="row-btn row-btn-move"
+                    disabled="@(index == 0)"
+                    aria-label="Move ingredient @(index + 1) up"
+                    @onclick="() => MoveRow(-1, index)">
               Up
             </button>
 
             <button type="button"
                     class="row-btn row-btn-move"
                     disabled="@(index == ingredients.Count - 1)"
+                    aria-label="Move ingredient @(index + 1) down"
                     @onclick="() => MoveRow(1, index)">
               Down
             </button>
@@ -65,14 +69,16 @@
   </div>
 
   <button type="button"
-      id="add-ingredient-row-btn"
-      class="add-row-btn"
-      @onclick="AddRow">
+          id="add-ingredient-row-btn"
+          class="add-row-btn"
+          @onclick="AddRow">
     Add Row
   </button>
 </div>
 @code {
   private List<IngredientRow> ingredients = new() { new() };
+  private int? movedRowIndex;
+  private int moveDirection;
 
 private readonly List<string> units = new()
   {
@@ -116,11 +122,42 @@ private readonly List<string> units = new()
     if (dir < 0 )
     {
       (ingredients[index - 1], ingredients[index]) = (ingredients[index], ingredients[index - 1]);
+      await TriggerMoveAnimation(index - 1, -1);
     }
     else if (dir > 0)
     {
       (ingredients[index + 1], ingredients[index]) = (ingredients[index], ingredients[index + 1]);
+      await TriggerMoveAnimation(index + 1, 1);
     }
   }
 
+  private async Task TriggerMoveAnimation(int targetIndex, int dir)
+  {
+    movedRowIndex = targetIndex;
+    moveDirection = dir;
+    StateHasChanged();
+
+    await Task.Delay(220);
+
+    if (movedRowIndex == targetIndex)
+    {
+      movedRowIndex = null;
+      StateHasChanged();
+    }
+  }
+
+  public bool HasIncompleteRows()
+  {
+    return ingredients.Any(i =>
+    {
+      bool hasAmount = !string.IsNullOrWhiteSpace(i.Amount);
+      bool hasUnit = !string.IsNullOrWhiteSpace(i.Unit);
+      bool hasIngredient = !string.IsNullOrWhiteSpace(i.Ingredient);
+
+      bool anyFilled = hasAmount || hasUnit || hasIngredient;
+      bool completeEnough = hasAmount && hasIngredient; // Unit optional, or require hasUnit too if desired
+
+      return anyFilled && !completeEnough;
+    });
+  }
 }
