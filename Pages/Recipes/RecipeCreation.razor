@@ -1,14 +1,65 @@
 @page "/recipes/new"
 
-<div>
-  <h2 >Create Recipe</h2>
+<div class="recipe-creation-page">
+  <h2 class="recipe-creation-title">Create Recipe</h2>
 
-      <h3>Ingredients</h3>
-      <IngredientSection/>
-      <h3>Instructions</h3>
-      <InstructionSection  />
+  <EditForm Model="dto" class="recipe-creation-form">
+    <DataAnnotationsValidator />
+
+    <div class="form-field">
+      <label for="recipe-title" class="form-label">Title</label>
+      <InputText id="recipe-title"
+        class="form-control"
+        placeholder="e.g. Garlic Butter Pasta"
+        @bind-Value="dto.Title" />
+      <ValidationMessage For="@(() => dto.Title)" class="validation-message" />
+    </div>
+
+    <div class="form-field">
+      <label for="recipe-description" class="form-label">Description</label>
+      <InputTextArea id="recipe-description"
+        class="form-control form-textarea"
+        rows="4"
+        placeholder="A short summary of the dish, flavor profile, or serving notes..."
+        @bind-Value="dto.Description" />
+      <ValidationMessage For="@(() => dto.Description)" class="validation-message" />
+    </div>
+
+    <section class="form-section" aria-labelledby="ingredients-heading">
+      <h3 id="ingredients-heading" class="section-heading">Ingredients</h3>
+      <IngredientSection @ref="ingredientSection" />
+    </section>
+
+    <section class="form-section" aria-labelledby="instructions-heading">
+      <h3 id="instructions-heading" class="section-heading">Instructions</h3>
+      <InstructionSection @ref="instructionSection" />
+    </section>
+
+    <div class="form-actions">
+      <button type="button"
+        id="check-ingredients-btn"
+        class="btn-secondary"
+        @onclick="Happy">
+        Hello
+      </button>
+    </div>
+  </EditForm>
 </div>
 
 @code {
   private RecipeCreationDto dto = new();
+  private IngredientSection? ingredientSection;
+  private InstructionSection? instructionSection;
+
+  private void Happy()
+  {
+    if (ingredientSection?.HasIncompleteRows() == true)
+    {
+      Console.WriteLine("NotHappy");
+    }
+    else
+    {
+      Console.WriteLine("Happy");
+    }
+  }
 }
