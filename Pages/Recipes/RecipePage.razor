@@ -1,7 +1,7 @@
 @page "/recipes/{Id:int}"
 @inject RecipeService RecipeService
 
-<div>
+<div class="recipe-detail-page">
   @if (Recipe == null)
   {
     <p class="loading-msg">Loading recipe...</p>
@@ -9,8 +9,8 @@
 else
   {
     <h2>@Recipe.Title</h2>
-    <h4>Posted by <a href="/users/@Recipe.UserId">@(Recipe.User != null ? Recipe.User.DisplayName : "Some Person")</a></h4>
-    <p class="text-muted">@Recipe.Description</p>
+    <h4 class="recipe-detail-meta">Posted by <a href="/users/@Recipe.UserId">@(Recipe.User != null ? Recipe.User.DisplayName : "Some Person")</a></h4>
+    <p class="recipe-description">@Recipe.Description</p>
 
     <hr />
 
@@ -25,7 +25,7 @@ else
     <h3>Instructions</h3>
     foreach(var (ins, index) in Recipe.GetParsedInstructions().Select((val, i) => (val, i)))
     {
-      <p>@(index+1). @ins</p>
+      <p class="recipe-step">@(index+1). @ins</p>
     }
 
     <a href="/recipes">Back to all recipes</a>

@@ -1,5 +1,6 @@
 @page "/recipes/new"
 @inject RecipeService RecipeService
+@inject NavigationManager NavigationManager
 
 <div class="recipe-creation-page">
   <h2 class="recipe-creation-title">Create Recipe</h2>
@@ -74,9 +75,15 @@
     }
 
     sectionValidationError = null;
-    string instructions = instructionSection?.GetInstructions() ?? string.Empty;
+    string instructions = instructionSection?.GetInstructions();
     dto.Instructions = instructions;
 
-    await RecipeService.CreateRecipeAsync(dto);
+    int recipeId = await RecipeService.CreateRecipeAsync(dto);
+    var ingredients = ingredientSection?.GetIngredients();
+    foreach (IngredientDto ingredient in ingredients)
+    {
+      await RecipeService.CreateIngredientAsync(ingredient, recipeId);
+    }
+    NavigationManager.NavigateTo($"/recipes/{recipeId}");
   }
 }

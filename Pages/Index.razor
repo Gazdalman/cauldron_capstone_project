@@ -1,16 +1,50 @@
 ﻿@page "/"
-@inject UserService UserService
+@using Cauldron.Shared.Modals
+@inject UserSessionState UserSessionState
 <PageTitle>Cauldron - Dashboard</PageTitle>
 
-@* <div class="p-5 mb-4 bg-light rounded-3 shadow-sm"> *@
-    @* <div class="container-fluid py-3">
-        <h1 class="display-5 fw-bold text-dark">Cauldron Kitchen Dashboard 🍲</h1>
-        <p class="col-md-8 fs-4 text-muted">
-            Recipes for your tavern with what you have on hand!
-        </p>
-        <div class="d-flex gap-3">
-            <a href="/recipes/new" class="btn btn-primary btn-lg">Create New Recipe</a>
-            <a href="/recipes" class="btn btn-outline-dark btn-lg">Browse Recipes</a>
-        </div>
+<div class="dashboard">
+  <div class="dashboard-card">
+    <h1>Cauldron Kitchen</h1>
+    <p>Plan hearty meals and keep every treasured recipe close at hand.</p>
+    <div class="dashboard-actions">
+      @if (UserSessionState.IsLoggedIn)
+      {
+        <a href="/recipes/new">Create New Recipe</a>
+      }
+      else
+      {
+        <button type="button" @onclick="OpenLogin">Login to create recipe</button>
+      }
+      <a href="/recipes">Browse Recipes</a>
     </div>
-</div> *@
+  </div>
+</div>
+
+<Modal IsOpen="IsModalOpen" OnClose="CloseModal">
+  @if (currView == ModalView.Login)
+  {
+    <LoginModal OnSuccess="CloseModal" OnSwitch="() => currView = ModalView.Register" />
+  }
+  else
+  {
+    <RegistrationModal OnSuccess="CloseModal" OnSwitch="() => currView = ModalView.Login" />
+  }
+</Modal>
+
+@code {
+  private enum ModalView { Login, Register }
+  private bool IsModalOpen;
+  private ModalView currView = ModalView.Login;
+
+  private void OpenLogin()
+  {
+    currView = ModalView.Login;
+    IsModalOpen = true;
+  }
+
+  private void CloseModal()
+  {
+    IsModalOpen = false;
+  }
+}

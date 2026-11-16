@@ -166,7 +166,7 @@
     });
   }
 
-  public List<RecipeIngredient> GetIngredients()
+  public List<IngredientDto> GetIngredients()
   {
     return ingredients
       .Where(i => !string.IsNullOrWhiteSpace(i.Amount)
@@ -179,7 +179,7 @@
         var quantity = string.Join(" ", new[] { amount, unit }.Where(s => !string.IsNullOrWhiteSpace(s)));
         var name = i.Ingredient?.Trim() ?? string.Empty;
 
-        return new RecipeIngredient
+        return new IngredientDto
         {
           Quantity = quantity,
           Ingredient = name
