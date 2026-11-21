@@ -1,0 +1,161 @@
+.ingredient-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ingredient-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.ingredient-row {
+  display: grid;
+  grid-template-columns: 1.75rem 6.75rem 8rem minmax(0, 1fr) 10.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.45rem 0.65rem;
+  background-color: #f4f1ea;
+  border: 1px solid #e4dccf;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.ingredient-row-number {
+  font-size: 0.925rem;
+  font-weight: 600;
+  color: #4a382b;
+  text-align: right;
+}
+
+.ingredient-input,
+.ingredient-select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #231912;
+  background-color: #ffffff;
+  border: 1px solid #c7b9a5;
+  border-radius: 8px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.ingredient-input::placeholder {
+  color: #8c7d6b;
+}
+
+.ingredient-input:focus,
+.ingredient-select:focus {
+  outline: none;
+  border-color: #2f5d3a;
+  box-shadow: 0 0 0 3px rgba(47, 93, 58, 0.2);
+}
+
+.ingredient-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.35rem;
+}
+
+.row-btn {
+  width: 3.1rem;
+  padding: 0.35rem 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #c7b9a5;
+  background-color: #ffffff;
+  color: #3d2e22;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.row-btn:hover:not(:disabled) {
+  background-color: #eae4d7;
+  border-color: #b09f88;
+}
+
+.row-btn:focus-visible {
+  outline: none;
+  border-color: #2f5d3a;
+  box-shadow: 0 0 0 3px rgba(47, 93, 58, 0.2);
+}
+
+.row-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background-color: #f4f1ea;
+  border-color: #e4dccf;
+  color: #9a8b78;
+}
+
+.row-btn-remove {
+  color: #b43229;
+  border-color: #e3a7a2;
+  background-color: #ffffff;
+}
+
+.row-btn-remove:hover:not(:disabled) {
+  background-color: #fdf2f1;
+  border-color: #d4837d;
+}
+
+.add-row-btn {
+  align-self: flex-start;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #23492d;
+  background-color: #e7f0e9;
+  border: 1px solid #b5cfb9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.add-row-btn:hover {
+  background-color: #d6e6d9;
+  border-color: #96ba9c;
+}
+
+.add-row-btn:focus-visible {
+  outline: none;
+  border-color: #2f5d3a;
+  box-shadow: 0 0 0 3px rgba(47, 93, 58, 0.2);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 600px) {
+  .ingredient-row {
+    grid-template-columns: 1.5rem 1fr 1fr;
+  }
+
+  .ingredient-name {
+    grid-column: 2 / -1;
+  }
+
+  .ingredient-row-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}

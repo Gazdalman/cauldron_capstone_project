@@ -3,17 +3,20 @@
     @foreach (var (ingredient, index) in ingredients.Select((ingredient, index) => (ingredient, index)))
     {
 
-      <div class="ingredient-row">
+
+      <div id="ingredient-row-@(index + 1)" class="ingredient-row">
         <span class="ingredient-row-number">@(index + 1).</span>
 
-        <input
+        <label for="ingredient-amount-@(index + 1)" class="sr-only">Amount</label>
+        <input id="ingredient-amount-@(index + 1)"
           type="text"
           class="ingredient-input ingredient-amount"
           placeholder="Amount"
           value="@ingredient.Amount"
           @oninput="e => OnAmountChange(index, e.Value?.ToString())" />
 
-        <select
+        <label for="ingredient-unit-@(index + 1)" class="sr-only">Unit</label>
+        <select id="ingredient-unit-@(index + 1)"
           class="ingredient-select ingredient-unit"
           value="@ingredient.Unit"
           @onchange="e => OnUnitChange(index, e.Value?.ToString())">
@@ -24,7 +27,8 @@
           }
         </select>
 
-        <input
+        <label for="ingredient-name-@(index + 1)" class="sr-only">Ingredient Name</label>
+        <input id="ingredient-name-@(index + 1)"
           type="text"
           class="ingredient-input ingredient-name"
           placeholder="Ingredient Name"
@@ -34,23 +38,24 @@
         @if (ingredients.Count > 1)
         {
           <div class="ingredient-row-actions">
-            <button
-                class="row-btn"
-                @onclick="() => RemoveRow(index)">
+            <button type="button"
+              class="row-btn row-btn-remove"
+              aria-label="Remove ingredient @(index + 1)"
+              @onclick="() => RemoveRow(index)">
               X
             </button>
 
-            <button
-                class="row-btn"
-                disabled="@(index == 0)"
-                @onclick="() => MoveRow(-1, index)">
+            <button type="button"
+              class="row-btn row-btn-move"
+              disabled="@(index == 0)"
+              @onclick="() => MoveRow(-1, index)">
               Up
             </button>
 
-            <button
-              class="row-btn"
-              disabled="@(index == ingredients.Count - 1)"
-              @onclick="() => MoveRow(1, index)">
+            <button type="button"
+                    class="row-btn row-btn-move"
+                    disabled="@(index == ingredients.Count - 1)"
+                    @onclick="() => MoveRow(1, index)">
               Down
             </button>
           </div>
@@ -59,16 +64,15 @@
     }
   </div>
 
-  <button
-          class="add-row-btn"
-          @onclick="AddRow">
+  <button type="button"
+      id="add-ingredient-row-btn"
+      class="add-row-btn"
+      @onclick="AddRow">
     Add Row
   </button>
 </div>
 @code {
   private List<IngredientRow> ingredients = new() { new() };
-  private int? movedRowIndex;
-  private int moveDirection;
 
 private readonly List<string> units = new()
   {
@@ -118,4 +122,5 @@ private readonly List<string> units = new()
       (ingredients[index + 1], ingredients[index]) = (ingredients[index], ingredients[index + 1]);
     }
   }
+
 }
