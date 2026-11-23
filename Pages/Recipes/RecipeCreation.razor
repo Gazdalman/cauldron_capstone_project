@@ -1,14 +1,89 @@
 @page "/recipes/new"
+@inject RecipeService RecipeService
+@inject NavigationManager NavigationManager
 
-<div>
-  <h2 >Create Recipe</h2>
+<div class="recipe-creation-page">
+  <h2 class="recipe-creation-title">Create Recipe</h2>
 
-      <h3>Ingredients</h3>
-      <IngredientSection/>
-      <h3>Instructions</h3>
-      <InstructionSection  />
+  <EditForm Model="dto" class="recipe-creation-form">
+    <DataAnnotationsValidator />
+
+    <div class="form-field">
+      <label for="recipe-title" class="form-label">Title</label>
+      <InputText id="recipe-title"
+        class="form-control"
+        placeholder="e.g. Garlic Butter Pasta"
+        @bind-Value="dto.Title" />
+      <ValidationMessage For="@(() => dto.Title)" class="validation-message" />
+    </div>
+
+    <div class="form-field">
+      <label for="recipe-description" class="form-label">Description</label>
+      <InputTextArea id="recipe-description"
+        class="form-control form-textarea"
+        rows="4"
+        placeholder="A short summary of the dish, flavor profile, or serving notes..."
+        @bind-Value="dto.Description" />
+      <ValidationMessage For="@(() => dto.Description)" class="validation-message" />
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(sectionValidationError))
+    {
+      <div class="validation-message">@sectionValidationError</div>
+    }
+
+    <section class="form-section" aria-labelledby="ingredients-heading">
+      <h3 id="ingredients-heading" class="section-heading">Ingredients</h3>
+      <IngredientSection @ref="ingredientSection" />
+    </section>
+
+    <section class="form-section" aria-labelledby="instructions-heading">
+      <h3 id="instructions-heading" class="section-heading">Instructions</h3>
+      <InstructionSection @ref="instructionSection" />
+    </section>
+
+    <div class="form-actions">
+      <button type="button"
+        id="check-ingredients-btn"
+        class="btn-secondary"
+        @onclick="HandleValidSubmit">
+        Hello
+      </button>
+    </div>
+  </EditForm>
 </div>
 
 @code {
+  private string? sectionValidationError;
   private RecipeCreationDto dto = new();
+  private IngredientSection? ingredientSection;
+  private InstructionSection? instructionSection;
+
+  private async Task HandleValidSubmit()
+  {
+    var isInvalid = ingredientSection?.HasIncompleteRows() ?? false;
+    var hasSteps = instructionSection?.HasSteps() ?? false;
+
+    if (isInvalid || !hasSteps)
+    {
+      sectionValidationError = (isInvalid && !hasSteps)
+        ? "Please add at least one ingredient and one instruction step or ensure ingredients have amount and ingredient listed."
+        : isInvalid
+          ? "Please add at least one ingredient or ensure ingredients have amount and ingredient listed."
+          : "Please add at least one instruction step.";
+      return;
+    }
+
+    sectionValidationError = null;
+    string instructions = instructionSection?.GetInstructions();
+    dto.Instructions = instructions;
+
+    int recipeId = await RecipeService.CreateRecipeAsync(dto);
+    var ingredients = ingredientSection?.GetIngredients();
+    foreach (IngredientDto ingredient in ingredients)
+    {
+      await RecipeService.CreateIngredientAsync(ingredient, recipeId);
+    }
+    NavigationManager.NavigateTo($"/recipes/{recipeId}");
+  }
 }
